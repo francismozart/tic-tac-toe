@@ -26,8 +26,6 @@ class Board extends React.Component {
   render() {
   	let boardRows = [];
 
-
-
     return (
       <div>
         <div className="board-row">
