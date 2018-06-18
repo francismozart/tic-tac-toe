@@ -16,7 +16,7 @@ class Board extends React.Component {
 
   renderSquare(i) {
     return (
-    	<Square 
+    	<Square key={'square'+i}
         value={this.props.squares[i]} 
         onClick={() => this.props.onClick(i)} 
       />
@@ -24,26 +24,31 @@ class Board extends React.Component {
   }
 
   render() {
+    let  oldBoardRows = Array(3).fill(Array(3).fill(null)),
+    counter = 0;
+
+    let newBoardRows = oldBoardRows.map((val, i) => {
+      let arrayInside = val.map((e, indice) => {
+        let initialCounter = counter;
+        counter++;
+
+        return (
+          this.renderSquare(initialCounter)
+        );
+      });
+      
+      return (
+        <div key={i} className="board-row">
+          {arrayInside}
+        </div>
+      );
+    });
 
     return (
       <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+        {newBoardRows}
       </div>
-      );
+    );
   }
 }
 
@@ -137,6 +142,15 @@ class Game extends React.Component {
     return colRowToRender;
   }
 
+  toggleOrder(){
+    let history = this.state.history;
+    history.reverse();
+
+    this.setState({history});
+
+    console.log(history);
+  }
+
   render() {
   	const history = this.state.history;
     const current = history[this.state.stepNumber];
@@ -153,8 +167,6 @@ class Game extends React.Component {
         </p>
       );
     });
-
-    console.log(moves);
 
     let status;
     if (winner) {
@@ -174,6 +186,9 @@ class Game extends React.Component {
         <div className="game-info">
           <h2 className="status">{status}</h2>
           <div>{moves}</div>
+          <div>
+            <button onClick={() => this.toggleOrder()}>Toggle Moves's Order</button>
+          </div>
         </div>
       </div>
       );
