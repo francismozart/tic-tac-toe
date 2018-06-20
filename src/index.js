@@ -56,10 +56,12 @@ class Game extends React.Component {
 	constructor(props) {
     super(props);
     this.state = {
-      history: [{
-        squares: Array(9).fill(null),
-        colRow: null
-      }],
+      history: [
+        {
+          squares: Array(9).fill(null),
+          colRow: null
+        }
+      ],
       stepNumber: 0,
       xIsNext: true,
     };
@@ -75,10 +77,12 @@ class Game extends React.Component {
     }
     squares[i] = this.state.xIsNext ? 'X' : 'O';
     this.setState({
-      history: history.concat([{
-        squares: squares,
-        colRow: this.getColRow(i)
-      }]), 
+      history: history.concat([
+        {
+          squares: squares,
+          colRow: this.getColRow(i)
+        }
+      ]), 
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext
     });
@@ -143,12 +147,21 @@ class Game extends React.Component {
   }
 
   toggleOrder(){
-    let history = this.state.history;
+    const history = this.state.history.slice(1),
+    first = this.state.history.slice(0,1),
+    oldStepNumber = this.state.stepNumber;
+    let newStepNumber;
+
     history.reverse();
 
-    this.setState({history});
+    const completeArray = first.concat(history);
 
-    console.log(history);
+    newStepNumber = completeArray.length - oldStepNumber;
+
+    this.setState({
+      history: completeArray,
+      stepNumber: newStepNumber
+    });
   }
 
   render() {
@@ -191,7 +204,7 @@ class Game extends React.Component {
           </div>
         </div>
       </div>
-      );
+    );
   }
 }
 
@@ -216,6 +229,7 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      console.log(lines[i]);
       return squares[a];
     }
   }
