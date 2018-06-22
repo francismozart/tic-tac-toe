@@ -30,6 +30,17 @@ ol, ul {
   padding: 0;
   text-align: center;
   width: 100px;
+
+  transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+}
+
+.square.winner {
+  background: green;
+  border-color: #fff;
+  color: #fff;
 }
 
 .square:focus {
