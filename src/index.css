@@ -1,6 +1,16 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,700');
+
 body {
-  font: 14px "Century Gothic", Futura, sans-serif;
+  font-family: 'Raleway', sans-serif;
+  font-size: 16px;
   margin: 20px;
+}
+button {
+  font: 400 11px 'Raleway';
+}
+#root {
+  display: flex;
+  justify-content: center;
 }
 
 ol, ul {
@@ -51,9 +61,12 @@ ol, ul {
   background: #ddd;
 }
 
-.game {
+.game-wrapper {
   display: flex;
   flex-direction: row;
+}
+
+.game {
 }
 
 .game-info {
@@ -63,7 +76,15 @@ ol, ul {
 p.PActive {
   font-weight: bolder;
 }
-
+.txt-reset {
+  font-size: 12px;
+}
+.btn-reset {
+  font-family: 'Raleway', sans-serif;
+  background: transparent;
+  border-radius: 3px;
+  border: 2px solid #777;
+}
 .hidden {
   display: none;
 }
