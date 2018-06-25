@@ -63,3 +63,7 @@ ol, ul {
 p.PActive {
   font-weight: bolder;
 }
+
+.hidden {
+  display: none;
+}
