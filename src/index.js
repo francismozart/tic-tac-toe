@@ -110,54 +110,12 @@ class Game extends React.Component {
   }
 
   getColRow(renderNumber){
-  	let colRowToRender;
+    const col = [0,3,6].includes(renderNumber) ? 1 : [1,4,7].includes(renderNumber) ? 2 : 3;
+    const row = renderNumber < 3 ? 1 : renderNumber > 5 ? 3 : 2;
 
-  	switch(renderNumber) {
-  		case 0:
-  		colRowToRender = "Col: 1, Row: 1";
-  		break;
+    console.log(renderNumber);
 
-  		case 1:
-  		colRowToRender = "Col: 2, Row: 1";
-  		break;
-
-  		case 2:
-  		colRowToRender = "Col: 3, Row: 1";
-  		break;
-
-  		case 3:
-  		colRowToRender = "Col: 1, Row: 2";
-  		break;
-
-  		case 4:
-  		colRowToRender = "Col: 2, Row: 2";
-  		break;
-
-  		case 5:
-  		colRowToRender = "Col: 3, Row: 2";
-  		break;
-
-  		case 6:
-  		colRowToRender = "Col: 1, Row: 3";
-  		break;
-
-  		case 7:
-  		colRowToRender = "Col: 2, Row: 3";
-  		break;
-
-  		case 8:
-  		colRowToRender = "Col: 3, Row: 3";
-  		break;
-
-  		default:
-  		colRowToRender = null;
-  	}
-
-    // const col = ... ?
-    // const row = ... ?
-    // return `Col: ${col}, Row: ${row}`
-
-    return colRowToRender;
+    return `Col: ${col}, Row: ${row}`;
   }
 
   toggleOrder(){
