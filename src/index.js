@@ -103,17 +103,34 @@ class Game extends React.Component {
   }
 
   jumpTo(step) {
-    this.setState({
-      stepNumber: step,
-      xIsNext: (step % 2) === 0,
-    });
+    let history;
+
+    if (step === 0) {
+      history = [
+        {
+          squares: Array(9).fill(null),
+          colRow: null,
+          playCount: 0
+        }
+      ];
+
+      this.setState({
+        history: history,
+        stepNumber: 0,
+        xIsNext: true,
+      });
+    } else {
+      this.setState({
+        stepNumber: step,
+        xIsNext: (step % 2) === 0,
+      });
+    }
   }
 
   getColRow(renderNumber){
+    let vector = [0,1,2,3,4,5,6,7,8];
     const col = [0,3,6].includes(renderNumber) ? 1 : [1,4,7].includes(renderNumber) ? 2 : 3;
     const row = renderNumber < 3 ? 1 : renderNumber > 5 ? 3 : 2;
-
-    console.log(renderNumber);
 
     return `Col: ${col}, Row: ${row}`;
   }
@@ -140,6 +157,9 @@ class Game extends React.Component {
   	const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
+    const classToHide = this.state.stepNumber === 0 ? "hidden": "";
+
+    console.log(this.state.stepNumber);
 
     const moves = history.map((step, move) => {
     	const classToBold = this.state.stepNumber === move ? "PActive" : "";
@@ -176,7 +196,7 @@ class Game extends React.Component {
         <div className="game-info">
           <h2 className="status">{status}</h2>
           <div>{moves}</div>
-          <div>
+          <div className={classToHide}>
             <button onClick={() => this.toggleOrder()}>Toggle Moves's Order</button>
           </div>
         </div>
