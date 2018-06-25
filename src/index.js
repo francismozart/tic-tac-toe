@@ -159,8 +159,6 @@ class Game extends React.Component {
     const winner = calculateWinner(current.squares);
     const classToHide = this.state.stepNumber === 0 ? "hidden": "";
 
-    console.log(this.state.stepNumber);
-
     const moves = history.map((step, move) => {
     	const classToBold = this.state.stepNumber === move ? "PActive" : "";
       const desc = move ?
