@@ -107,7 +107,6 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
     const classToHide = this.state.stepNumber === 0 ? "hidden": "";
-    const time = this.state.time;
 
     const moves = history.map((step, move) => {
     	const classToBold = this.state.stepNumber === move ? "PActive" : "";
@@ -122,6 +121,7 @@ class Game extends React.Component {
     });
 
     let status, winnerSquares;
+
     if (winner) {
       status = 'Winner: ' + winner.winner;
       winnerSquares = winner.winSquares;
@@ -133,9 +133,17 @@ class Game extends React.Component {
       winnerSquares = [];
     }
 
+    let timeNumber = this.state.time-1;
+
+    let timePassing = setTimeout(() => {
+      this.setState({time: timeNumber});
+    }, 1000);
+
+    if (this.state.time < 1) { clearTimeout(timePassing); }
+
     return (
       <div className="game">
-        <Clock />
+        <Clock time={timeNumber} />
         <div className="game-wrapper">
           <div className="game-board">
             <Board 
