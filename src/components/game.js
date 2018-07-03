@@ -24,32 +24,58 @@ class Game extends React.Component {
       time: 30,
       stepNumber: 0,
       xIsNext: true,
+      gameIsOver: false,
+      isSidebarCollapsed: true
     };
   }
 
   handleClick(i) {
-  	const history = this.state.history.slice(0, this.state.stepNumber + 1);
-    const current = history[this.state.stepNumber];
-    const squares = current.squares.slice();
-
-    if (calculateWinner(squares) || squares[i]) {
+    if (this.state.gameIsOver) {
       return;
+    } else {
+    	const history = this.state.history.slice(0, this.state.stepNumber + 1);
+      const current = history[this.state.stepNumber];
+      const squares = current.squares.slice();
+
+      if (calculateWinner(squares) || squares[i]) {
+        this.gameOver();
+        return;
+      }
+
+      squares[i] = this.state.xIsNext ? 'X' : 'O';
+
+      this.setState({
+        history: history.concat([
+          {
+            squares: squares,
+            colRow: this.getColRow(i),
+            playCount: current.playCount+1
+          }
+        ]),
+        time: 30,
+        stepNumber: history.length,
+        xIsNext: !this.state.xIsNext
+      });
     }
+  }
 
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
+  componentDidMount() {
+    this.timePassing = setInterval(() => this.clockTick(), 1000);
+  }
 
-    this.setState({
-      history: history.concat([
-        {
-          squares: squares,
-          colRow: this.getColRow(i),
-          playCount: current.playCount+1
-        }
-      ]),
-      time: 30,
-      stepNumber: history.length,
-      xIsNext: !this.state.xIsNext
-    });
+  componentDidUpdate(){
+
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timePassing);
+  }
+
+  gameOver(){
+    clearInterval(this.timePassing);
+
+    const gameIsOver = true;
+    this.setState({gameIsOver: gameIsOver});
   }
 
   jumpTo(step) {
@@ -102,6 +128,20 @@ class Game extends React.Component {
     });
   }
 
+  clockTick(){
+    if (this.state.time < 1) {
+      this.gameOver();
+    } else {
+      const timeNumber = this.state.time-1;
+      this.setState({time: timeNumber});
+    }
+  }
+
+  toggleSideBar(){
+    const sideBarStatus = !this.state.isSidebarCollapsed;
+    this.setState({isSidebarCollapsed: sideBarStatus});
+  }
+
   render() {
   	const history = this.state.history;
     const current = history[this.state.stepNumber];
@@ -125,38 +165,45 @@ class Game extends React.Component {
     if (winner) {
       status = 'Winner: ' + winner.winner;
       winnerSquares = winner.winSquares;
+      clearInterval(this.timePassing);
     } else if (current.playCount === 9) {
       status = "Draw!"
       winnerSquares = [];
+      clearInterval(this.timePassing);
     } else {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
       winnerSquares = [];
     }
 
-    let timeNumber = this.state.time-1;
+    const isSidebarCollapsed = this.state.isSidebarCollapsed ? "" : "show";
+    const timeNumber = this.state.time;
 
-    let timePassing = setTimeout(() => {
-      this.setState({time: timeNumber});
-    }, 1000);
-
-    if (this.state.time < 1) { clearTimeout(timePassing); }
+    if (this.state.time < 1) {
+      status = 'Time out! Winner: ' + (this.state.xIsNext ? 'X' : 'O');
+      winnerSquares = [];
+    }
 
     return (
       <div className="game">
-        <Clock time={timeNumber} />
+        <h2 className="status">{status}</h2>
+
+        <Clock timeCount={timeNumber} />
+
+        <button className="sideBarToggle" onClick={() => this.toggleSideBar()}>Toggle Game History</button>
+
         <div className="game-wrapper">
           <div className="game-board">
             <Board 
-            squares={current.squares} winnerSquares={winnerSquares}
-            onClick={(i) => this.handleClick(i)}
+              squares={current.squares} winnerSquares={winnerSquares}
+              onClick={(i) => this.handleClick(i)}
             />
           </div>
-          <div className="game-info">
-            <h2 className="status">{status}</h2>
-            <div>{moves}</div>
-            <div className={classToHide}>
-              <button onClick={() => this.toggleOrder()}><FontAwesomeIcon icon="sort" /> Invert Order</button>
-            </div>
+        </div>
+
+        <div className={"game-info sideBar "+isSidebarCollapsed}>
+          <div>{moves}</div>
+          <div className={classToHide}>
+            <button onClick={() => this.toggleOrder()}><FontAwesomeIcon icon="sort" /> Invert Order</button>
           </div>
         </div>
       </div>
