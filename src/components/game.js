@@ -38,7 +38,6 @@ class Game extends React.Component {
       const squares = current.squares.slice();
 
       if (calculateWinner(squares) || squares[i]) {
-        this.gameOver();
         return;
       }
 
@@ -60,7 +59,7 @@ class Game extends React.Component {
   }
 
   componentDidMount() {
-    this.timePassing = setInterval(() => this.clockTick(), 1000);
+    this.startClock();
   }
 
   componentDidUpdate(){
@@ -69,6 +68,13 @@ class Game extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.timePassing);
+  }
+
+  startClock(){
+    this.timePassing = setInterval(() => this.clockTick(), 1000);
+
+    const gameIsOver = false;
+    this.setState({gameIsOver: gameIsOver});
   }
 
   gameOver(){
@@ -82,6 +88,8 @@ class Game extends React.Component {
     let history;
 
     if (step === 0) {
+      this.startClock();
+
       history = [
         {
           squares: Array(9).fill(null),
@@ -152,7 +160,7 @@ class Game extends React.Component {
     	const classToBold = this.state.stepNumber === move ? "PActive" : "";
       const desc = move ?
       'Go to move #' + step.playCount :
-      'Go to game start';
+      'Restart Game';
       return (
         <p key={move} className={'txt-reset '+classToBold}>
           {history[move].colRow} <button className='btn-reset' onClick={() => this.jumpTo(move)}>{desc}</button>
